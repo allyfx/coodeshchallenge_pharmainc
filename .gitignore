@@ -66,3 +66,6 @@ package-lock.json
 
 # Lock
 yarn.lock
+
+# Env
+.env
