@@ -14,7 +14,9 @@ import {
 } from './styles';
 
 interface IPatientCardData {
-  uuid: string;
+  login: {
+    uuid: string;
+  };
   name: {
     title: string;
     first: string;
@@ -48,7 +50,7 @@ export function PatientCard({patient, onPress}: IPatientCardProps) {
         <Column>
           <PatientName>
             <NameTitle>{patient.name.title}</NameTitle>
-            <Name>{`${patient.name.first}${patient.name.last}`}</Name>
+            <Name>{`${patient.name.first} ${patient.name.last}`}</Name>
           </PatientName>
 
           <Gap value={12} orientation="vertical" />

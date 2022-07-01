@@ -1,5 +1,7 @@
 export interface IPatientData {
-  uuid: string;
+  login: {
+    uuid: string;
+  };
   id: {
     name: string;
     value: string;
