@@ -87,7 +87,7 @@ export function Home() {
     async function getData() {
       try {
         const response = await api.get(
-          `/?results=50&page=${paginationPage}&seed=foobar`,
+          `?results=50&page=${paginationPage}&seed=foobar`,
         );
 
         const newPatients = isLoadingMore
