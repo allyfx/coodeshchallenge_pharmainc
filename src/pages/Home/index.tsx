@@ -30,6 +30,7 @@ import {
   Count,
   CountText,
   CountLine,
+  FlatlistLoadingContainer,
 } from './styles';
 
 export function Home() {
@@ -38,25 +39,32 @@ export function Home() {
   const {modalRef} = usePatientModal();
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   const [patients, setPatients] = useState<IPatientData[]>([]);
+  const [paginationPage, setPaginationPage] = useState(1);
 
   useEffect(() => {
     async function getData() {
       try {
-        setIsLoading(true);
-
-        const response = await api.get('/?results=50');
-        setPatients(formatPatientsRequestData(response));
+        const response = await api.get(
+          `/?results=50&page=${paginationPage}&seed=foobar`,
+        );
+        setPatients(oldState => [
+          ...oldState,
+          ...formatPatientsRequestData(response),
+        ]);
       } catch (err) {
         /** Here you could put an alert  */
         console.log(err);
       } finally {
         setIsLoading(false);
+        setIsLoadingMore(false);
       }
     }
 
     getData();
-  }, []);
+  }, [paginationPage]);
 
   return (
     <Container>
@@ -84,6 +92,12 @@ export function Home() {
         <FlatList
           keyExtractor={item => item.login.uuid}
           data={patients}
+          onEndReached={() => {
+            if (!isLoadingMore) {
+              setPaginationPage(oldState => oldState + 1);
+              setIsLoadingMore(true);
+            }
+          }}
           renderItem={({item}) => (
             <PatientCard
               patient={item}
@@ -93,6 +107,13 @@ export function Home() {
               }}
             />
           )}
+          ListFooterComponent={() =>
+            isLoadingMore ? (
+              <FlatlistLoadingContainer>
+                <Load />
+              </FlatlistLoadingContainer>
+            ) : null
+          }
           ItemSeparatorComponent={() => (
             <Gap value={8} orientation="vertical" />
           )}

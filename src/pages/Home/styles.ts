@@ -60,3 +60,7 @@ export const CountLine = styled.View`
 
   margin-bottom: 24px;
 `;
+
+export const FlatlistLoadingContainer = styled.View`
+  margin: 16px 0;
+`;
