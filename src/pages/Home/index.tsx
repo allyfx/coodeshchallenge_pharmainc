@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {FlatList} from 'react-native';
 
 import {useTheme} from 'styled-components';
-import {useInfoPatient} from '../../contexts/InforPatientContext';
+import {useInfoPatient} from '../../contexts/InfoPatientContext';
 import {usePatientModal} from '../../contexts/PatientModalContext';
 
 import {Input} from '../../components/Input';
@@ -13,7 +13,10 @@ import {Gap} from '../../components/Gap';
 import {PatientCard} from '../../components/PatientCard';
 import {Load} from '../../components/Load';
 
-import {formatPatientsRequestData} from './utils/formatPatientsRequestData';
+import {formatPatientsRequestData} from './functions/formatPatientsRequestData';
+import {filterByNationality} from './functions/filterByNationality';
+import {filterByGender} from './functions/filterByGender';
+import {getGenderValue} from './functions/getGenderValue';
 
 import {ClipboardList} from 'lucide-react-native';
 
@@ -38,6 +41,7 @@ import {
 
 export function Home() {
   const theme = useTheme();
+
   const {setSelectedPatient} = useInfoPatient();
   const {modalRef} = usePatientModal();
 
@@ -49,38 +53,35 @@ export function Home() {
 
   const [paginationPage, setPaginationPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [filterByGender, setFilterByGender] = useState<'female' | 'male'>();
+  const [gender, setGender] = useState<'female' | 'male'>();
 
-  function handleFilterPatientsByNationality() {
+  function onFilterBySearch() {
     setPatients(
-      search !== ''
-        ? patients.filter(
-            patient => patient.nat.toLowerCase() === search.toLowerCase(),
-          )
-        : initialPatients,
+      filterByNationality({
+        initialPatients,
+        patients,
+        search,
+      }),
     );
   }
 
-  function handleSelectFilterByGender(filter: 'female' | 'male') {
-    if (filterByGender === filter) {
-      setFilterByGender(undefined);
-      return;
-    }
-
-    setFilterByGender(filter);
+  function onPressGender(filter: 'female' | 'male') {
+    setGender(
+      getGenderValue({
+        filter,
+        gender,
+      }),
+    );
   }
 
   useEffect(() => {
-    if (filterByGender) {
-      setPatients(
-        initialPatients.filter(
-          patient => patient.gender.toLowerCase() === filterByGender,
-        ),
-      );
-    } else {
-      setPatients(initialPatients);
-    }
-  }, [filterByGender]);
+    setPatients(
+      filterByGender({
+        gender,
+        initialPatients,
+      }),
+    );
+  }, [gender]);
 
   useEffect(() => {
     async function getData() {
@@ -119,13 +120,13 @@ export function Home() {
 
         <Gap value={16} />
 
-        <FilterButton onPress={handleFilterPatientsByNationality} />
+        <FilterButton onPress={onFilterBySearch} />
       </Form>
 
       <FilterContainer>
         <Filter
-          selected={filterByGender === 'female'}
-          onPress={() => handleSelectFilterByGender('female')}
+          selected={gender === 'female'}
+          onPress={() => onPressGender('female')}
           activeOpacity={0.5}>
           <FilterValue>Female</FilterValue>
         </Filter>
@@ -133,8 +134,8 @@ export function Home() {
         <Gap value={8} />
 
         <Filter
-          selected={filterByGender === 'male'}
-          onPress={() => handleSelectFilterByGender('male')}
+          selected={gender === 'male'}
+          onPress={() => onPressGender('male')}
           activeOpacity={0.8}>
           <FilterValue>Male</FilterValue>
         </Filter>

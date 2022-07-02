@@ -3,7 +3,7 @@ import 'react-native-gesture-handler';
 import React from 'react';
 
 import {ThemeProvider} from 'styled-components/native';
-import {InfoPatientContextProvider} from './src/contexts/InforPatientContext';
+import {InfoPatientContextProvider} from './src/contexts/InfoPatientContext';
 import {PatientModalContextProvider} from './src/contexts/PatientModalContext';
 
 import {Home} from './src/pages/Home';

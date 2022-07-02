@@ -1,12 +1,12 @@
 import React from 'react';
 
-import {useInfoPatient} from '../../../contexts/InforPatientContext';
+import {useInfoPatient} from '../../../contexts/InfoPatientContext';
 
 import {formatDateToString} from '../../../utils/functions/formatDateToString';
 import {formatPatientAddress} from '../../../utils/functions/formatPatientAddress';
 
 import {Load} from '../../Load';
-import {DefaultInfo} from './DefaultInfo';
+import {DefaultInfo} from './components/DefaultInfo';
 import {Gap} from '../../Gap';
 import {ClipButton} from '../../ClipButton';
 

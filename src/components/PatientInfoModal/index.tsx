@@ -2,7 +2,7 @@ import React from 'react';
 
 import {useTheme} from 'styled-components';
 
-import {useInfoPatient} from '../../contexts/InforPatientContext';
+import {useInfoPatient} from '../../contexts/InfoPatientContext';
 
 import BottomSheet from '@gorhom/bottom-sheet';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
