@@ -64,3 +64,29 @@ export const CountLine = styled.View`
 export const FlatlistLoadingContainer = styled.View`
   margin: 16px 0;
 `;
+
+export const FilterContainer = styled.View`
+  flex-direction: row;
+
+  padding: 0 16px;
+  margin-top: 16px;
+`;
+
+type IFilterProps = {
+  selected: boolean;
+};
+
+export const Filter = styled.TouchableOpacity<IFilterProps>`
+  padding: 4px 6px;
+
+  background-color: ${({theme}) => theme.colors.green};
+  border-radius: 8px;
+
+  opacity: ${({selected}) => (selected ? 1 : 0.6)};
+`;
+
+export const FilterValue = styled.Text`
+  font-family: 'Inter';
+  font-size: 14px;
+  color: ${({theme}) => theme.colors.light_green};
+`;

@@ -31,6 +31,9 @@ import {
   CountText,
   CountLine,
   FlatlistLoadingContainer,
+  FilterContainer,
+  Filter,
+  FilterValue,
 } from './styles';
 
 export function Home() {
@@ -43,8 +46,10 @@ export function Home() {
 
   const [initialPatients, setInitialPatients] = useState<IPatientData[]>([]);
   const [patients, setPatients] = useState<IPatientData[]>([]);
+
   const [paginationPage, setPaginationPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [filterByGender, setFilterByGender] = useState<'female' | 'male'>();
 
   function handleFilterPatientsByNationality() {
     setPatients(
@@ -56,6 +61,27 @@ export function Home() {
     );
   }
 
+  function handleSelectFilterByGender(filter: 'female' | 'male') {
+    if (filterByGender === filter) {
+      setFilterByGender(undefined);
+      return;
+    }
+
+    setFilterByGender(filter);
+  }
+
+  useEffect(() => {
+    if (filterByGender) {
+      setPatients(
+        initialPatients.filter(
+          patient => patient.gender.toLowerCase() === filterByGender,
+        ),
+      );
+    } else {
+      setPatients(initialPatients);
+    }
+  }, [filterByGender]);
+
   useEffect(() => {
     async function getData() {
       try {
@@ -63,14 +89,12 @@ export function Home() {
           `/?results=50&page=${paginationPage}&seed=foobar`,
         );
 
-        setPatients(oldState => [
-          ...oldState,
-          ...formatPatientsRequestData(response),
-        ]);
-        setInitialPatients(oldState => [
-          ...oldState,
-          ...formatPatientsRequestData(response),
-        ]);
+        const newPatients = isLoadingMore
+          ? [...initialPatients, formatPatientsRequestData(response)]
+          : formatPatientsRequestData(response);
+
+        setPatients(newPatients);
+        setInitialPatients(newPatients);
       } catch (err) {
         /** Here you could put an alert  */
         console.log(err);
@@ -97,6 +121,24 @@ export function Home() {
 
         <FilterButton onPress={handleFilterPatientsByNationality} />
       </Form>
+
+      <FilterContainer>
+        <Filter
+          selected={filterByGender === 'female'}
+          onPress={() => handleSelectFilterByGender('female')}
+          activeOpacity={0.5}>
+          <FilterValue>Female</FilterValue>
+        </Filter>
+
+        <Gap value={8} />
+
+        <Filter
+          selected={filterByGender === 'male'}
+          onPress={() => handleSelectFilterByGender('male')}
+          activeOpacity={0.8}>
+          <FilterValue>Male</FilterValue>
+        </Filter>
+      </FilterContainer>
 
       <Content>
         <Count>

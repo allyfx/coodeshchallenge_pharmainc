@@ -9,6 +9,7 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-shadow': ['error'],
         'react-native/no-inline-styles': 'off',
+        'react-hooks/exhaustive-deps': 'off',
         'no-shadow': 'off',
         'no-undef': 'off',
       },
