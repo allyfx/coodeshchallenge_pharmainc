@@ -13,6 +13,7 @@ List your patients and see informations about them.
 
 ### 🖥 Setup
 - Clone the repository or download zip
+- Duplicate `.env.example`, rename it to `.env` and fill `API_URL=` with RandomUser's
 - Run `npm install` to install dependencies
 - In case you're using IOS Simulator
   - Enter ios folder
