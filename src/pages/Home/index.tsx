@@ -87,11 +87,11 @@ export function Home() {
     async function getData() {
       try {
         const response = await api.get(
-          `?results=50&page=${paginationPage}&seed=foobar`,
+          `?results=50&page=${paginationPage}&seed=challenge`,
         );
 
         const newPatients = isLoadingMore
-          ? [...initialPatients, formatPatientsRequestData(response)]
+          ? [...initialPatients, ...formatPatientsRequestData(response)]
           : formatPatientsRequestData(response);
 
         setPatients(newPatients);
