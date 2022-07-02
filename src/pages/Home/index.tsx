@@ -41,8 +41,20 @@ export function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
+  const [initialPatients, setInitialPatients] = useState<IPatientData[]>([]);
   const [patients, setPatients] = useState<IPatientData[]>([]);
   const [paginationPage, setPaginationPage] = useState(1);
+  const [search, setSearch] = useState('');
+
+  function handleFilterPatientsByNationality() {
+    setPatients(
+      search !== ''
+        ? patients.filter(
+            patient => patient.nat.toLowerCase() === search.toLowerCase(),
+          )
+        : initialPatients,
+    );
+  }
 
   useEffect(() => {
     async function getData() {
@@ -50,7 +62,12 @@ export function Home() {
         const response = await api.get(
           `/?results=50&page=${paginationPage}&seed=foobar`,
         );
+
         setPatients(oldState => [
+          ...oldState,
+          ...formatPatientsRequestData(response),
+        ]);
+        setInitialPatients(oldState => [
           ...oldState,
           ...formatPatientsRequestData(response),
         ]);
@@ -74,11 +91,11 @@ export function Home() {
       </Header>
 
       <Form>
-        <Input placeholder="Search..." />
+        <Input placeholder="Search..." onChangeText={setSearch} />
 
         <Gap value={16} />
 
-        <FilterButton />
+        <FilterButton onPress={handleFilterPatientsByNationality} />
       </Form>
 
       <Content>
@@ -93,7 +110,7 @@ export function Home() {
           keyExtractor={item => item.login.uuid}
           data={patients}
           onEndReached={() => {
-            if (!isLoadingMore) {
+            if (!isLoadingMore && search === '') {
               setPaginationPage(oldState => oldState + 1);
               setIsLoadingMore(true);
             }
